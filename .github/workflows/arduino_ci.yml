@@ -17,15 +17,15 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Arduino CLI
-      uses: arduino/setup-arduino-cli@v1
+      uses: per1234/setup-arduino@v1
       with:
-        version: 0.20.2
+        arduino-cli-version: latest
 
     - name: Install dependencies
       run: |
         arduino-cli core update-index
         arduino-cli core install esp32:esp32
-        arduino-cli lib install "Ed25519" "Base64"
+        arduino-cli lib install "https://github.com/kostko/arduino-crypto.git"
 
     - name: Compile Sketch
       run: |
