@@ -1,0 +1,37 @@
+name: Arduino CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Arduino CLI
+      uses: arduino/setup-arduino-cli@v1
+      with:
+        version: 0.20.2
+
+    - name: Install dependencies
+      run: |
+        arduino-cli core update-index
+        arduino-cli core install esp32:esp32
+        arduino-cli lib install "Ed25519" "Base64"
+
+    - name: Compile Sketch
+      run: |
+        arduino-cli compile --fqbn esp32:esp32:esp32 CryptoSignAuthenticatorTest
+
+    - name: Run unit tests
+      run: |
+        arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 CryptoSignAuthenticatorTest
+
